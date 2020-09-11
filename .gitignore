@@ -1,2 +1,3 @@
 User/migrations/*
 User/__pycache__/*
+.vscode/
