@@ -1,3 +1,4 @@
 User/migrations/*
 User/__pycache__/*
 .vscode/
+ ParkingLot/__pycache__/
