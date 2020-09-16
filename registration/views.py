@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from .models import User
 from ParkingLot import settings
 import jwt
+from django.contrib.auth import login, logout
 
 
 # Create your views here.
@@ -37,6 +38,6 @@ class Login(APIView):
         }
 
         access_token = jwt.encode(access_token_payload, settings.SECRET_KEY)
-        
+        login(request, user)
         data = {"user": user.username, "token": access_token}
         return Response(data)
