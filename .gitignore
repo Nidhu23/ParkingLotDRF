@@ -1,4 +1,7 @@
-User/migrations/*
-User/__pycache__/*
+registration/migrations/*
+registration/__pycache__/*
 .vscode/
- ParkingLot/__pycache__/
+ ParkingLot/__pycache__/*
+ parking/__pycache__/*
+ parking/migrations/*
+ parking/migrations/*
