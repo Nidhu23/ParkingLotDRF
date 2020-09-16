@@ -13,5 +13,5 @@ class Roles(models.Model):
 
 
 class User(AbstractUser):
+    EMAIL_FIELD = models.EmailField(unique=True, blank=False)
     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
-    
