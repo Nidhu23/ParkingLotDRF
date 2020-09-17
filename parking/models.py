@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from registration.models import User
+from django.utils import timezone
 # Create your models here.
 park_type_choices = (("Vallet", "Vallet"), ("Own", "Own"))
 vehicle_type_choices = (("bike", "bike"), ("car", "car"))
@@ -30,7 +31,7 @@ class Parking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     vehicle_color = models.CharField(max_length=300)
     disabled = models.BooleanField(choices=((True, True), (False, False)))
-    entry_time = models.DateTimeField(auto_now_add=True)
+    entry_time = models.DateTimeField(default=timezone.now())
 
     def assign_slot(self, slots_taken):
         total_slots = set(range(1, 401))
@@ -43,5 +44,6 @@ class UnPark(models.Model):
     slot = models.IntegerField()
     vehicle_num = models.CharField(max_length=200)
     entry_time = models.DateTimeField()
-    exit_time = models.DateTimeField(auto_now_add=True)
+    exit_time = models.DateTimeField()
+    charge = models.DecimalField(max_digits=20,decimal_places=4)
 
