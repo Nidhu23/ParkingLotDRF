@@ -6,6 +6,8 @@ from .models import Parking, UnPark
 from rest_framework import status
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
+import logging
+logger= logging.getLogger('django')
 #from rest_framework_simplejwt import authentication
 # Create your views here.
 
@@ -23,6 +25,7 @@ class Park(APIView):
                 return Response("Your car has been parked",
                                 status=status.HTTP_201_CREATED)
         except Parking.DoesNotExist:
+            logger.error("parking object not found")
             return Response("Park object does not exist")
         except ParseError:
             return Response("Check your request data",
@@ -43,4 +46,5 @@ class Park(APIView):
             park_details.delete()
             return Response("Unparked", status=status.HTTP_201_CREATED)
         except Parking.DoesNotExist:
+            logger.error("parking object not found")
             return Response("The vehicle with this number is not parked here",status=status.HTTP_404_NOT_FOUND)
