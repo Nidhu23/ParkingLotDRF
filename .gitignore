@@ -1,7 +1,11 @@
 registration/migrations/*
 registration/__pycache__/*
 .vscode/
- ParkingLot/__pycache__/*
- parking/__pycache__/*
- parking/migrations/*
- parking/migrations/*
+ParkingLot/__pycache__/*
+parking/__pycache__/*
+parking/migrations/*
+parking/migrations/*
+parking/tests.py
+parking/__init__.py
+registration/__init__.py
+registration/tests
