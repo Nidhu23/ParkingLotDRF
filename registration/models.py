@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-ROLE_CHOICES = (("DR", "driver"), ("PL", "police"), ("SY", "security"),
-                ("LO", "lot_owner"))
+ROLE_CHOICES = (("driver", "driver"), ("police", "police"),
+                ("security", "security"), ("lot_owner", "lot_owner"))
 
 
 class Roles(models.Model):
