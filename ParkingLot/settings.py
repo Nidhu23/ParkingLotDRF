@@ -29,9 +29,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'drf_yasg',
+    'search.apps.SearchConfig',
     'rest_framework',
     'registration.apps.RegistrationConfig',
     'parking.apps.ParkingConfig',
+    'django_celery_results',
+    'django_celery_beat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -101,7 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 AUTH_USER_MODEL = 'registration.User'
 """REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -127,11 +130,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'demonidhu@gmail.com'
+EMAIL_HOST_PASSWORD = 'password1234!'
 LOGGING = {
     'version': 1,
     'loggers': {
         'django': {
-            'handlers': ['file','file2'],
+            'handlers': ['file', 'file2'],
             'level': 'DEBUG'
         }
     },
