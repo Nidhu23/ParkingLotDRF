@@ -1,5 +1,7 @@
 from django.utils import timezone
 from .models import UnPark
+import jwt
+from ParkingLot import settings
 
 
 def un_park(instance):
@@ -28,3 +30,9 @@ def calc_charge(exit_time, instance):
         DISCOUNT = 0.1
         charges = charges - (charges * DISCOUNT)
     return charges
+
+
+def get_user(user_token):
+    payload = jwt.decode(user_token, settings.SECRET_KEY)
+    username = payload.get('username')
+    return username
