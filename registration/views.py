@@ -7,22 +7,30 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User
 from rest_framework.decorators import api_view
+from parking.services import get_user
 from ParkingLot import settings
 from . import redis_setup
 import jwt
 import datetime
 import redis
+from .redis_setup import get_redis_instance
+from .tasks import send_notification
 from django.contrib.auth import login, logout
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 
-# Create your views here.
-class Register(generics.GenericAPIView, mixins.CreateModelMixin):
-    serializer_class = RegisterSerializer
-
-    def post(self, request):
-        return self.create(request)
+@api_view(['POST'])
+def register(request):
+    user_email = request.data['email']
+    user_name = request.data['username']
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        send_notification.delay(user_email, user_name)
+        return Response("SUCCESSFULLY REGISTERED",
+                        status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Login(APIView):
@@ -62,3 +70,15 @@ class Login(APIView):
                             status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response("user not registered,please register")
+
+
+@api_view(['GET'])
+def logout(request):
+    try:
+        redis_instance = get_redis_instance()
+        user = get_user(request.headers.get('token'))
+        redis_instance.delete(user)
+        return Response("logged out successfully", status=status.HTTP_200_OK)
+    except DataError:
+        return Response("You are not logged in",
+                        status=status.HTTP_404_NOT_FOUND)
