@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
 import logging
+from ParkingLot.decorators import jwt_decode
 from . import services
 logger = logging.getLogger('django')
 #from rest_framework_simplejwt import authentication
@@ -14,6 +15,7 @@ logger = logging.getLogger('django')
 
 
 class Park(APIView):
+    @jwt_decode
     def post(self, request):
         try:
             slot_list = set(Parking.objects.values_list("slot", flat=True))
@@ -33,6 +35,7 @@ class Park(APIView):
                             status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors)
 
+    @jwt_decode
     def delete(self, request):
         try:
             vehicle_num = request.data.get('vehicle_num')
