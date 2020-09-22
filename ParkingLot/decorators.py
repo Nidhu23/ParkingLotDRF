@@ -20,7 +20,8 @@ def jwt_decode(view_func):
                 return Response("You are not logged in, Please login")
         except jwt.ExpiredSignatureError:
             return Response("Please login again")
-        return Response(exception={"exec": jwt.exceptions})
+        except Exception:
+            return Response(exception=True)
 
     return wrap
 
@@ -45,5 +46,3 @@ def role_required(roles_allowed=[]):
         return wrap
 
     return check_permission
-
-
