@@ -18,19 +18,27 @@ from .tasks import send_notification
 from django.contrib.auth import login, logout
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from rest_framework import exceptions
 
 
 @api_view(['POST'])
 def register(request):
-    user_email = request.data['email']
-    user_name = request.data['username']
-    serializer = RegisterSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        send_notification.delay(user_email, user_name)
-        return Response("SUCCESSFULLY REGISTERED",
-                        status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        user_email = request.data['email']
+        user_name = request.data['username']
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            send_notification.delay(user_email, user_name)
+            return Response("SUCCESSFULLY REGISTERED",
+                            status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except exceptions as exception:
+        return Response(exception=True,
+                        data={
+                            "exception": exception,
+                            "status": status.HTTP_400_BAD_REQUEST
+                        })
 
 
 class Login(APIView):
@@ -70,6 +78,10 @@ class Login(APIView):
                             status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response("user not registered,please register")
+        except exceptions as exception:
+            return Response(data={"exception": exception})
+        except Exception:
+            return Response("Error")
 
 
 @api_view(['GET'])
