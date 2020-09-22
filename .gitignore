@@ -8,4 +8,5 @@ parking/migrations/*
 parking/tests.py
 parking/__init__.py
 registration/__init__.py
-registration/tests
+registration/tests.py
+logs/
