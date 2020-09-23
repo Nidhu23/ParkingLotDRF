@@ -19,6 +19,15 @@ from django.contrib.auth import login, logout
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework import exceptions
+''' 
+Register API
+
+Parameters:
+argument(1):request paramter: having username,role,email,password
+
+Returns:
+registers user and returns status code and message
+'''
 
 
 @api_view(['POST'])
@@ -39,6 +48,17 @@ def register(request):
                             "exception": exception,
                             "status": status.HTTP_400_BAD_REQUEST
                         })
+
+
+''' 
+Login API
+
+Parameters:
+argument(1):request paramter: having username,password
+
+Returns:
+create access token and returns status code and message
+'''
 
 
 class Login(APIView):
@@ -63,16 +83,10 @@ class Login(APIView):
                 return Response("username required")
             if not user.check_password(password):
                 return Response("wrong password entered")
-            access_token_payload = {
-                'username':
-                user.username,
-                'exp':
-                datetime.datetime.utcnow() +
-                datetime.timedelta(days=0, minutes=15)
-            }
+            access_token_payload = {'username': 'login' + user.username}
             access_token = jwt.encode(access_token_payload,
                                       settings.SECRET_KEY)
-            redis_instance.set(username, access_token)
+            redis_instance.set('login' + username, access_token)
             return Response("LOGIN SUCCESSFULL",
                             headers={'token': access_token},
                             status=status.HTTP_200_OK)
@@ -82,6 +96,17 @@ class Login(APIView):
             return Response(data={"exception": exception})
         except Exception:
             return Response("Error")
+
+
+''' 
+Logout function
+
+Parameters:
+argument(1):request paramter: token in request header
+
+Returns:
+deletes the user from redis 
+'''
 
 
 @api_view(['GET'])

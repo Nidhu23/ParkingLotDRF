@@ -2,6 +2,15 @@ from django.utils import timezone
 from .models import UnPark
 import jwt
 from ParkingLot import settings
+''' 
+unpark function
+
+Parameters:
+argument(1) instance of type Parking
+
+Returns:
+deletes vehicle details from parking collection and saves to unparking collection 
+'''
 
 
 def un_park(instance):
@@ -17,6 +26,18 @@ def un_park(instance):
                                       vehicle_num=vehicle_num)
     un_parked.save()
     instance.delete()
+
+
+''' 
+function that calculates charge
+
+Parameters:
+argument(1) exit time
+argument(2) instance of type parking
+
+Returns:
+total charge based on role,park and vehicle type
+'''
 
 
 def calc_charge(exit_time, instance):
