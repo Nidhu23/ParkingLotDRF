@@ -11,6 +11,13 @@ class Roles(models.Model):
                             choices=ROLE_CHOICES)
     charge = models.DecimalField(max_digits=8, decimal_places=4)
 
+    def __str__(self):
+        return str(self.role) + ", " + str(self.charge)
+
 
 class User(AbstractUser):
     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.username) + ", " + str(self.email) + ", " + str(
+            self.role)
