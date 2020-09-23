@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,7 +19,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'y()+8pz(g7a$xtsq5q7&sxno$k0uvz-3^v+p&02(mjsa2ko4y&'
+
+
+SECRET_KEY = config('SECRET_KEY')
+REDIS_PORT = config('REDIS_PORT')
+REDIS_HOST = config('REDIS_HOST')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,12 +39,12 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'drf_yasg',
-    'search.apps.SearchConfig',
     'rest_framework',
-    'registration.apps.RegistrationConfig',
+    'Users.apps.UsersConfig',
     'parking.apps.ParkingConfig',
     'django_celery_results',
     'django_celery_beat',
+    'reset_migrations',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,7 +89,7 @@ WSGI_APPLICATION = 'ParkingLot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'ParkingLot',
+        'NAME': 'ParkingLot_DB',
     }
 }
 
@@ -105,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-AUTH_USER_MODEL = 'registration.User'
+AUTH_USER_MODEL = 'Users.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -128,11 +137,6 @@ STATIC_URL = '/static/'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'demonidhu@gmail.com'
-EMAIL_HOST_PASSWORD = 'password1234!'
 LOGGING = {
     'version': 1,
     'loggers': {
